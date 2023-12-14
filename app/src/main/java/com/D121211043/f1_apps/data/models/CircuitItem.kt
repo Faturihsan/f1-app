@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class CircuitItem(
-    @SerialName("circuit_key")
+    @SerialName("data")
     val circuit_key: Int,
     @SerialName("circuit_short_name")
     val circuit_short_name: String,

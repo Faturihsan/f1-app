@@ -11,12 +11,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.D121211043.f1_apps.data.repository.CircuitRepository
 import com.D121211043.f1_apps.MyApplication
-import com.D121211043.f1_apps.data.response.CircuitResponse
+import com.D121211043.f1_apps.data.models.CircuitItem
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 sealed interface MainUiState {
-    data class Success(val meetingNames: List<String>) : MainUiState
+    data class Success(val circuit: List<CircuitItem>) : MainUiState
     object Error : MainUiState
     object Loading : MainUiState
 }
@@ -30,20 +30,13 @@ class MainViewModel(private val circuitRepository: CircuitRepository) : ViewMode
         mainUiState = MainUiState.Loading
         try {
             val result = circuitRepository.getCircuit()
-            val meetingNames = getMeetingNames(listOfNotNull(result)) // Wrap single CircuitResponse in a list
-            Log.d("MainViewModel", "getCircuit: ${meetingNames.size}")
-            mainUiState = MainUiState.Success(meetingNames)
+            Log.d("MainViewModel", "getNews: ${result.data?.size}")
+            mainUiState = MainUiState.Success(result.data.orEmpty())
         } catch (e: IOException) {
-            Log.d("MainViewModel", "getCircuit error: ${e.message}")
+            Log.d("MainViewMode", "getNews error: ${e.message}")
             mainUiState = MainUiState.Error
         }
     }
-
-
-    private fun getMeetingNames(circuitResponses: List<CircuitResponse>?): List<String> {
-        return circuitResponses?.mapNotNull { it.meetingName } ?: emptyList()
-    }
-
 
     init {
         getCircuit()

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         topBar = {
                             TopAppBar(
-                                title = { Text(text = "List News") },
+                                title = { Text(text = "Circuit List of Formula 1") },
                             )
                         },
                         floatingActionButton = {
@@ -60,37 +61,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun convertToCircuitItems(meetingNames: List<String>): List<CircuitItem> {
-        // Assuming you have other information to populate CircuitItem fields
-        return meetingNames.map { name ->
-            CircuitItem(
-                meeting_name = name,
-                meeting_official_name = "Placeholder",
-                circuit_key = 1,
-                circuit_short_name = "Placeholder",
-                country_code = "Placeholder",
-                country_key = 1,
-                country_name = "Placeholder",
-                date_start = "Placeholder",
-                gmt_offset ="Placeholder",
-                location = "Placeholder",
-                meeting_key = 1,
-                year = 1,
-            )
-        }
-    }
     @Composable
     private fun ListCircuitScreen(mainUiState: MainUiState, modifier: Modifier = Modifier) {
         when(mainUiState) {
-            is MainUiState.Success -> {
-                val circuitItems = convertToCircuitItems(mainUiState.meetingNames)
-                ListCircuit(circuitItems)
-            }
+            is MainUiState.Success -> ListCircuit(mainUiState.circuit)
             is MainUiState.Error -> ErrorText()
             is MainUiState.Loading -> LoadingBar()
         }
     }
-
 
     @Composable
     private fun ErrorText() {
@@ -105,8 +83,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun ListCircuit(circuits: List<CircuitItem>, modifier: Modifier = Modifier) {
         LazyColumn(modifier = modifier) {
-            items(circuits.size) { index ->
-                CircuitCard(circuits[index])
+            items(circuits) { circuit ->
+                CircuitCard(circuit = circuit)
             }
         }
     }

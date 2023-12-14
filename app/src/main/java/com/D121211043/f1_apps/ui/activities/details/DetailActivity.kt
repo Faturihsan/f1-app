@@ -40,7 +40,7 @@ class DetailActivity : ComponentActivity() {
     private fun DetailScreen() {
         LazyColumn {
             item {
-                Text(text = selectedCircuit?.meeting_official_name.toString())
+                Text(text = selectedCircuit?.meeting_name.toString())
                 Text(text = selectedCircuit?.location.toString())
             }
         }
